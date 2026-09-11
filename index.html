@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Place of dreams</title>
+<style>
+  /* ===================== CSS VARIABLES ===================== */
+  :root {
+    --accent-gold: #e8b04b;
+    --accent-sakura: #f4a6c1;
+    --text-cream: #fdf6ee;
+    --text-charcoal: #1c2126;
+    --glass-bg: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.18);
+    --shadow-deep: rgba(0,0,0,0.4);
+    --bg-dark: #0d1117;
+    --bg-darker: #0a0d12;
+    --font-display: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Helvetica Neue', Arial, sans-serif;
+    --fs-hero: clamp(2.2rem, 7.5vw, 6.5rem);
+    --fs-h2: clamp(1.8rem, 5vw, 3.4rem);
+    --fs-body: clamp(0.95rem, 1.5vw, 1.15rem);
+    --space-lg: clamp(2.4rem, 8vw, 8rem);
+    --space-md: clamp(1.2rem, 4vw, 3rem);
+    --jp: #e8834b; --ch: #4fb888; --no: #7fa8d9; --is: #63c7e8; --nz: #9b7fd9;
+    --safe-l: env(safe-area-inset-left, 0px);
+    --safe-r: env(safe-area-inset-right, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-cream);
+    line-height: 1.6;
+  }
+
+  ::selection { background: var(--accent-gold); color: var(--text-charcoal); }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #101820; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(var(--accent-gold), var(--accent-sakura)); border-radius: 10px; }
+  img, svg { display: block; max-width: 100%; }
+  a { -webkit-tap-highlight-color: transparent; }
+
+  /* ===================== NAVIGATION ===================== */
+  .navbar {
+    position: fixed;
+    top: max(1rem, var(--safe-t));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(94%, 1080px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.6rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    box-shadow: 0 8px 32px var(--shadow-deep);
+    transition: background 0.4s ease, padding 0.4s ease;
+  }
+
+  .navbar.scrolled { background: rgba(15,18,26,0.65); padding: 0.6rem 1.6rem; }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 3vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-cream);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-logo svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+
+  .nav-links li { position: relative; }
+
+  .nav-links a {
+    color: var(--text-cream);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 500;
+    position: relative;
+    opacity: 0.8;
+    transition: opacity 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    display: block;
+    padding: 0.4rem 0;
+  }
+
+  .nav-underline {
+    position: absolute;
+    bottom: -2px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-sakura));
+    border-radius: 2px;
+    transition: left 0.4s cubic-bezier(.2,.8,.2,1), width 0.4s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a.active { opacity: 1; color: var(--accent-gold); }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    z-index: 1001;
+    padding: 10px;
+    margin: -10px;
+  }
+
+  .nav-toggle span { width: 22px; height: 2px; background: var(--text-cream); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+
+  /* ===================== HERO ===================== */
+  .parallax-hero {
+    position: relative;
+    height: 100svh;
+    min-height: 480px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-photo {
+    position: absolute;
+    inset: -10% 0 -10% 0;
+    background-image: url('https://images.unsplash.com/photo-1748582903466-2adc948723cf?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center 60%;
+    will-change: transform;
+    transform: scale(1.15);
+    z-index: 1;
+  }
+
+  .hero-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,13,20,0.55) 0%, rgba(10,13,20,0.15) 30%, rgba(10,13,20,0.35) 65%, rgba(8,10,15,0.9) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .cloud-drift { position: absolute; opacity: 0.5; z-index: 3; filter: blur(0.5px); pointer-events: none; }
+  .cloud-drift.c1 { top: 14%; left: -10%; width: 220px; animation: driftRight 55s linear infinite; }
+  .cloud-drift.c2 { top: 24%; left: -20%; width: 150px; animation: driftRight 40s linear infinite; animation-delay: -12s; opacity: 0.35; }
+  .cloud-drift.c3 { top: 9%; left: -15%; width: 280px; animation: driftRight 70s linear infinite; animation-delay: -30s; opacity: 0.4; }
+  @keyframes driftRight { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+
+  .hero-content { position: relative; z-index: 5; text-align: center; padding: 0 1.2rem; max-width: 900px; }
+
+  .hero-eyebrow {
+    display: inline-block; font-size: clamp(0.6rem, 2vw, 0.8rem);
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent-gold);
+    margin-bottom: 1rem; opacity: 0; animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--font-display); font-size: var(--fs-hero); font-weight: 700; line-height: 1.05;
+    color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,0.45); margin-bottom: 1.1rem;
+    opacity: 0; animation: fadeUp 1s ease 0.45s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-sakura));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    background-size: 200% auto;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer { 0%,100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+
+  .hero-sub {
+    font-size: clamp(0.92rem, 2vw, 1.25rem); color: rgba(255,255,255,0.92); max-width: 580px;
+    margin: 0 auto 2rem; text-shadow: 0 2px 14px rgba(0,0,0,0.4);
+    opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.9rem 2rem;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.4); border-radius: 50px;
+    color: #fff; text-decoration: none; font-size: 0.92rem; letter-spacing: 0.04em;
+    backdrop-filter: blur(10px); transition: background 0.35s ease, transform 0.35s ease;
+    opacity: 0; animation: fadeUp 1s ease 0.95s forwards;
+  }
+  .hero-cta:hover { background: rgba(255,255,255,0.25); transform: translateY(-3px); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+
+  .scroll-indicator {
+    position: absolute; bottom: max(1.6rem, var(--safe-b)); left: 50%; transform: translateX(-50%); z-index: 5;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.85); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0; animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .scroll-mouse { width: 22px; height: 34px; border: 2px solid rgba(255,255,255,0.7); border-radius: 14px; position: relative; }
+  .scroll-mouse::before {
+    content: ''; position: absolute; top: 6px; left: 50%; width: 4px; height: 7px;
+    background: #fff; border-radius: 2px; transform: translateX(-50%); animation: scrollDot 1.8s ease infinite;
+  }
+  @keyframes scrollDot { 0% { opacity: 1; top: 6px; } 70% { opacity: 0; top: 18px; } 100% { opacity: 0; top: 6px; } }
+
+  #particle-canvas { position: fixed; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen; }
+
+  /* Cursor glow */
+  #cursor-glow {
+    position: fixed; width: 340px; height: 340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,176,75,0.10) 0%, rgba(232,176,75,0) 70%);
+    pointer-events: none; z-index: 4; transform: translate(-50%,-50%);
+    transition: opacity 0.4s ease; opacity: 0; will-change: transform;
+  }
+
+  /* ===================== SECTIONS (GENERAL) ===================== */
+  main { position: relative; background: var(--bg-dark); }
+  .section { position: relative; padding: var(--space-lg) var(--space-md); max-width: 1200px; margin: 0 auto; }
+  .section-header { text-align: center; max-width: 720px; margin: 0 auto var(--space-md); padding: 0 0.5rem; }
+  .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent-gold); display: block; margin-bottom: 0.75rem; }
+  .section-title { font-family: var(--font-display); font-size: var(--fs-h2); color: var(--text-cream); margin-bottom: 0.9rem; }
+  .section-desc { color: rgba(253,246,238,0.75); font-size: var(--fs-body); }
+
+  .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.9s cubic-bezier(.2,.7,.2,1), transform 0.9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1.visible { transition-delay: 0.1s; }
+  .reveal-delay-2.visible { transition-delay: 0.2s; }
+  .reveal-delay-3.visible { transition-delay: 0.3s; }
+
+  .divider-band { position: relative; height: 90px; overflow: hidden; background: var(--bg-dark); }
+  .divider-band svg { width: 100%; height: 100%; }
+
+  /* ===================== DESTINATION CARDS ===================== */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(0.8rem, 2vw, 1.6rem); }
+
+  .dest-card {
+    position: relative; display: block; text-decoration: none; border-radius: 18px; overflow: hidden;
+    aspect-ratio: 3/4; border: 1px solid rgba(255,255,255,0.09); perspective: 800px;
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease;
+    transform-style: preserve-3d;
+  }
+  .dest-card:hover, .dest-card:active { box-shadow: 0 20px 45px rgba(0,0,0,0.45); }
+  .dest-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .dest-card:hover img { transform: scale(1.1); }
+  .dest-card-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,10,15,0.94) 0%, rgba(8,10,15,0.15) 55%, rgba(8,10,15,0.35) 100%); }
+  .dest-card-body { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(0.8rem, 3vw, 1.3rem) clamp(0.75rem, 3vw, 1.2rem); }
+  .dest-card-country { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 0.3rem; display: block; }
+  .dest-card-body h4 { font-family: var(--font-display); font-size: clamp(0.95rem, 3vw, 1.2rem); color: #fff; margin-bottom: 0.25rem; }
+  .dest-card-body span.loc { font-size: 0.72rem; color: rgba(255,255,255,0.7); }
+  .dest-card-weather {
+    position: absolute; top: 0.7rem; right: 0.7rem; width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(10,13,20,0.55); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center;
+  }
+  .dest-card-weather svg { width: 16px; height: 16px; }
+
+  /* ===================== COUNTRY PARALLAX SECTIONS ===================== */
+  .country-section { position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden; padding: var(--space-lg) 0; }
+  .country-bg { position: absolute; inset: -12% 0 -12% 0; background-size: cover; background-position: center; will-change: transform; transform: scale(1.15); z-index: 1; }
+  .country-overlay { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  .country-content { position: relative; z-index: 3; max-width: 1200px; margin: 0 auto; padding: 0 var(--space-md); width: 100%; }
+  .country-section.align-right .country-content { display: flex; justify-content: flex-end; }
+  .country-section.align-left .country-content { display: flex; justify-content: flex-start; }
+
+  .country-panel {
+    background: rgba(10,13,20,0.5); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 22px; padding: clamp(1.4rem, 4vw, 2.6rem); max-width: 580px; width: 100%;
+  }
+
+  .country-num { font-family: var(--font-display); font-size: 0.9rem; letter-spacing: 0.1em; }
+  .country-flag-row { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.9rem; }
+
+  .country-panel h3 {
+    font-family: var(--font-display); font-size: clamp(1.5rem, 4.5vw, 2.6rem); color: #fff; line-height: 1.1;
+    margin-bottom: 0.5rem; text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .country-panel .country-loc {
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65);
+    margin-bottom: 1rem; display: block;
+  }
+  .country-panel p { color: rgba(253,246,238,0.88); font-size: var(--fs-body); margin-bottom: 0.85rem; }
+
+  .country-stats { display: flex; gap: clamp(0.9rem, 3vw, 1.7rem); margin-top: 1.3rem; flex-wrap: wrap; }
+  .country-stats .stat-num { font-family: var(--font-display); font-size: clamp(1.2rem, 3vw, 1.55rem); font-weight: 700; transition: color 0.3s ease; }
+  .country-stats .stat-label { font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(253,246,238,0.6); }
+
+  #japan .stat-num { color: var(--jp); } #switzerland .stat-num { color: var(--ch); }
+  #norway .stat-num { color: var(--no); } #iceland .stat-num { color: var(--is); } #newzealand .stat-num { color: var(--nz); }
+  #japan .country-num { color: var(--jp); } #switzerland .country-num { color: var(--ch); }
+  #norway .country-num { color: var(--no); } #iceland .country-num { color: var(--is); } #newzealand .country-num { color: var(--nz); }
+
+  /* ===================== CLIMATE STRIP ===================== */
+  .climate-label {
+    display: flex; align-items: center; gap: 0.5rem; margin-top: 1.4rem; margin-bottom: 0.7rem;
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55);
+  }
+  .climate-label svg { width: 14px; height: 14px; opacity: 0.7; }
+
+  .climate-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+
+  .climate-chip {
+    position: relative; padding: 0.85rem 0.4rem 0.65rem; border-radius: 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    text-align: center; transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .climate-chip:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); }
+
+  .climate-chip.best {
+    border-color: var(--accent-gold);
+    background: rgba(232,176,75,0.1);
+    animation: glowPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 0 0 1px rgba(232,176,75,0.5), 0 0 14px rgba(232,176,75,0.15); }
+    50% { box-shadow: 0 0 0 1px rgba(232,176,75,0.9), 0 0 22px rgba(232,176,75,0.4); }
+  }
+
+  .climate-chip.best::before {
+    content: '★ BEST'; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+    background: var(--accent-gold); color: #1c2126; font-size: 0.52rem; letter-spacing: 0.04em;
+    padding: 2px 7px; border-radius: 20px; font-weight: 700; white-space: nowrap;
+  }
+
+  .climate-chip .season-icon { width: 20px; height: 20px; margin: 0 auto 0.35rem; }
+  .climate-chip .season-icon svg { width: 100%; height: 100%; }
+  .climate-chip .season-name { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); margin-bottom: 0.15rem; }
+  .climate-chip .season-temp { font-family: var(--font-display); font-size: clamp(0.78rem, 2vw, 0.92rem); color: #fff; font-weight: 700; }
+
+  .best-time-note {
+    margin-top: 0.9rem; font-size: 0.8rem; color: rgba(253,246,238,0.75);
+    display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.5;
+  }
+  .best-time-note svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--accent-gold); }
+
+  /* Weather icon animations */
+  .icon-sun-rays { transform-origin: center; animation: rotateSlow 20s linear infinite; }
+  @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .icon-snowflake { animation: floatSway 3.5s ease-in-out infinite; }
+  @keyframes floatSway { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-2px) rotate(8deg); } }
+  .icon-leaf { animation: leafSway 3s ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes leafSway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  .icon-blossom { animation: pulseSoft 2.4s ease-in-out infinite; }
+  @keyframes pulseSoft { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+  /* ===================== QUOTE SECTION ===================== */
+  .quote-section { position: relative; padding: var(--space-lg) var(--space-md); text-align: center; background: linear-gradient(180deg, var(--bg-dark), #141b26); }
+  .quote-mark { font-family: var(--font-display); font-size: 4rem; color: var(--accent-gold); opacity: 0.4; line-height: 0.5; }
+  blockquote { font-family: var(--font-display); font-size: clamp(1.15rem, 3vw, 2.1rem); max-width: 780px; margin: 1rem auto 1.4rem; color: var(--text-cream); font-style: italic; line-height: 1.5; padding: 0 0.5rem; }
+  .quote-attr { color: var(--accent-sakura); font-size: 0.9rem; letter-spacing: 0.05em; }
+
+  /* ===================== FOOTER ===================== */
+  footer { position: relative; background: var(--bg-darker); padding: var(--space-md) var(--space-md) calc(2rem + var(--safe-b)); overflow: hidden; }
+  .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2.2rem; position: relative; z-index: 2; }
+  .footer-brand h3 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.75rem; color: var(--text-cream); }
+  .footer-brand p { color: rgba(253,246,238,0.6); font-size: 0.88rem; max-width: 320px; }
+  .footer-col h6 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 0.9rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.55rem; }
+  .footer-col a { color: rgba(253,246,238,0.65); text-decoration: none; font-size: 0.87rem; transition: color 0.3s ease; }
+  .footer-col a:hover { color: var(--accent-sakura); }
+  .footer-bottom {
+    max-width: 1200px; margin: 2.2rem auto 0; padding-top: 1.6rem; border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; font-size: 0.76rem; color: rgba(253,246,238,0.45);
+    position: relative; z-index: 2;
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 900px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .country-panel { max-width: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed; top: 0; right: 0; height: 100svh; width: min(72%, 300px);
+      background: rgba(15,18,26,0.97); backdrop-filter: blur(20px);
+      flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: max(2rem, var(--safe-t)) 2.2rem 2rem; gap: 1.4rem;
+      transform: translateX(100%); transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+      padding-right: calc(2.2rem + var(--safe-r));
+    }
+    .nav-links.open { transform: translateX(0); }
+    .nav-underline { display: none; }
+    .nav-links a { font-size: 1rem; padding: 0.5rem 0; }
+    .nav-toggle { display: flex; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .country-section.align-right .country-content,
+    .country-section.align-left .country-content { justify-content: center; }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+    .country-stats { gap: 1rem; }
+    .country-panel { padding: 1.4rem; border-radius: 16px; }
+    .climate-strip { gap: 0.4rem; }
+  }
+
+  @media (max-width: 480px) {
+    .navbar { padding: 0.65rem 1rem; left: max(1rem, var(--safe-l)); right: max(1rem, var(--safe-r)); transform: none; width: auto; }
+    .nav-logo span.logo-text { display: none; }
+    .section { padding: var(--space-lg) 1rem; }
+    .country-content { padding: 0 1rem; }
+    .climate-strip { grid-template-columns: repeat(2, 1fr); }
+    .climate-chip.best::before { font-size: 0.46rem; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 360px) {
+    .hero-sub { font-size: 0.85rem; }
+    .hero-cta { padding: 0.75rem 1.5rem; font-size: 0.82rem; }
+    .country-panel h3 { font-size: 1.4rem; }
+    .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .parallax-hero { height: auto; min-height: 100svh; padding: 5rem 1rem 3rem; }
+    .scroll-indicator { display: none; }
+  }
+
+  @media (hover: none) {
+    .dest-card:hover img { transform: none; }
+    .dest-card:active img { transform: scale(1.06); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important; scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor-glow"></div>
+
+<!-- ===================== NAVIGATION ===================== -->
+<nav class="navbar" id="navbar">
+  <a href="#home" class="nav-logo">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L2 20h20L12 3z" fill="#e8b04b"/><path d="M12 8l-6 12h12L12 8z" fill="#fdfdfd"/></svg>
+    <span class="logo-text">NOVACHRONO</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#japan" data-target="japan">Japan</a></li>
+    <li><a href="#switzerland" data-target="switzerland">Switzerland</a></li>
+    <li><a href="#norway" data-target="norway">Norway</a></li>
+    <li><a href="#iceland" data-target="iceland">Iceland</a></li>
+    <li><a href="#newzealand" data-target="newzealand">New Zealand</a></li>
+    <div class="nav-underline" id="navUnderline"></div>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="parallax-hero" id="home" data-weather="sakura">
+  <div class="hero-photo" id="heroPhoto"></div>
+  <div class="hero-gradient"></div>
+  <svg class="cloud-drift c1" viewBox="0 0 200 80"><ellipse cx="40" cy="45" rx="40" ry="20" fill="#fff" opacity="0.9"/><ellipse cx="90" cy="35" rx="55" ry="28" fill="#fff" opacity="0.9"/><ellipse cx="150" cy="48" rx="42" ry="20" fill="#fff" opacity="0.9"/></svg>
+  <svg class="cloud-drift c2" viewBox="0 0 200 80"><ellipse cx="40" cy="45" rx="35" ry="16" fill="#fff" opacity="0.8"/><ellipse cx="90" cy="35" rx="45" ry="22" fill="#fff" opacity="0.8"/><ellipse cx="140" cy="48" rx="34" ry="16" fill="#fff" opacity="0.8"/></svg>
+  <svg class="cloud-drift c3" viewBox="0 0 200 80"><ellipse cx="40" cy="45" rx="50" ry="22" fill="#fff" opacity="0.75"/><ellipse cx="100" cy="38" rx="62" ry="30" fill="#fff" opacity="0.75"/><ellipse cx="165" cy="50" rx="45" ry="20" fill="#fff" opacity="0.75"/></svg>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">Five Countries · Five Wonders</span>
+    <h1 class="hero-title">Where Earth<br>Shows Its <em>Grandeur</em></h1>
+    <p class="hero-sub">From Japan's sacred volcano to New Zealand's mirrored fjords — an immersive journey through five of the planet's most breathtaking natural landscapes, with real climate guides for each.</p>
+    <a href="#destinations" class="hero-cta">Begin the Journey ↓</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    Scroll
+  </div>
+</header>
+
+<canvas id="particle-canvas"></canvas>
+
+<main>
+
+  <div class="divider-band">
+    <svg viewBox="0 0 1600 100" preserveAspectRatio="none">
+      <path d="M0,45 C300,90 500,10 800,45 C1100,80 1300,20 1600,55 L1600,100 L0,100 Z" fill="#0d1117"/>
+    </svg>
+  </div>
+
+  <!-- ===================== DESTINATIONS INTRO ===================== -->
+  <section class="section" id="destinations">
+    <div class="section-header">
+      <span class="section-eyebrow reveal">The Collection</span>
+      <h2 class="section-title reveal reveal-delay-1">Five Wonders, Five Climates</h2>
+      <p class="section-desc reveal reveal-delay-2">Each destination has its own weather rhythm — scroll down for the best season to see it at its finest.</p>
+    </div>
+    <div class="cards-grid">
+      <a href="#japan" class="dest-card reveal">
+        <img src="https://images.unsplash.com/photo-1748582903466-2adc948723cf?auto=format&fit=crop&w=600&q=75" alt="Mount Fuji, Japan" loading="lazy">
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-weather" title="Best: Spring &amp; Autumn"><svg viewBox="0 0 24 24" fill="none" stroke="#f4a6c1" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+        <div class="dest-card-body"><span class="dest-card-country">Japan</span><h4>Mount Fuji</h4><span class="loc">Shizuoka &amp; Yamanashi</span></div>
+      </a>
+      <a href="#switzerland" class="dest-card reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1747137657921-f8176c34e33b?auto=format&fit=crop&w=600&q=75" alt="Swiss Alps" loading="lazy">
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-weather" title="Best: Summer"><svg viewBox="0 0 24 24" fill="none" stroke="#4fb888" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+        <div class="dest-card-body"><span class="dest-card-country">Switzerland</span><h4>The Swiss Alps</h4><span class="loc">Airolo, Ticino</span></div>
+      </a>
+      <a href="#norway" class="dest-card reveal reveal-delay-2">
+        <img src="https://images.unsplash.com/photo-1744619438365-19c55e108cb7?auto=format&fit=crop&w=600&q=75" alt="Norwegian Fjords" loading="lazy">
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-weather" title="Best: Summer (Midnight Sun)"><svg viewBox="0 0 24 24" fill="none" stroke="#7fa8d9" stroke-width="2"><path d="M12 2v3M12 19v3M4 4l2 2M18 18l2 2M2 12h3M19 12h3M4 20l2-2M18 6l2-2"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="dest-card-body"><span class="dest-card-country">Norway</span><h4>Lofoten Fjords</h4><span class="loc">Reinebringen</span></div>
+      </a>
+      <a href="#iceland" class="dest-card reveal">
+        <img src="https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&w=600&q=75" alt="Seljalandsfoss Waterfall, Iceland" loading="lazy">
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-weather" title="Best: Summer (Jun-Aug)"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg></div>
+        <div class="dest-card-body"><span class="dest-card-country">Iceland</span><h4>Seljalandsfoss</h4><span class="loc">South Iceland</span></div>
+      </a>
+      <a href="#newzealand" class="dest-card reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1535451180130-91275dae7d6f?auto=format&fit=crop&w=600&q=75" alt="Milford Sound, New Zealand" loading="lazy">
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-weather" title="Best: Nov-Mar (Southern Summer)"><svg viewBox="0 0 24 24" fill="none" stroke="#9b7fd9" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg></div>
+        <div class="dest-card-body"><span class="dest-card-country">New Zealand</span><h4>Milford Sound</h4><span class="loc">Fiordland, South Island</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== JAPAN ===================== -->
+  <section class="country-section align-left" id="japan" data-weather="sakura">
+    <div class="country-bg parallax-bg" data-speed="0.35" style="background-image:url('https://images.unsplash.com/photo-1748582903466-2adc948723cf?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="country-overlay" style="background:linear-gradient(100deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0.45) 45%, rgba(8,10,15,0.15) 75%);"></div>
+    <div class="country-content">
+      <div class="country-panel reveal">
+        <div class="country-flag-row"><span class="country-num">01 / JAPAN</span></div>
+        <h3>Mount Fuji</h3>
+        <span class="country-loc">Shizuoka &amp; Yamanashi Prefectures</span>
+        <p>Rising 3,776 meters in a near-perfect volcanic cone, Fuji has been Japan's most sacred natural monument since the 7th century, when pilgrims first climbed its slopes seeking spiritual purification.</p>
+        <p>Still an active stratovolcano, its symmetry has inspired centuries of art — from Hokusai's woodblock prints to the cherry-blossom-framed views that draw photographers to the Fuji Five Lakes each spring.</p>
+        <div class="country-stats">
+          <div class="stat"><div class="stat-num" data-count="3776" data-suffix="m">0m</div><div class="stat-label">Elevation</div></div>
+          <div class="stat"><div class="stat-num" data-count="1707" data-suffix="">0</div><div class="stat-label">Last Eruption</div></div>
+          <div class="stat"><div class="stat-num" data-count="300" data-suffix="K+">0K+</div><div class="stat-label">Annual Climbers</div></div>
+        </div>
+        <div class="climate-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg>
+          Weather &amp; Best Season
+        </div>
+        <div class="climate-strip">
+          <div class="climate-chip best">
+            <div class="season-icon icon-blossom"><svg viewBox="0 0 24 24" fill="#f4a6c1"><circle cx="12" cy="6" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="2.2" fill="#e8b04b"/></svg></div>
+            <div class="season-name">Spring</div><div class="season-temp">10–19°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e8834b" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+            <div class="season-name">Summer</div><div class="season-temp">20–28°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-leaf"><svg viewBox="0 0 24 24" fill="#e8b04b"><path d="M17 3c-6 0-12 5-12 12 0 3 2 5 5 5 7 0 12-6 12-12 0-3-2-5-5-5z"/></svg></div>
+            <div class="season-name">Autumn</div><div class="season-temp">8–18°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-snowflake"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M12 2v20M4 7l16 10M20 7L4 17"/></svg></div>
+            <div class="season-name">Winter</div><div class="season-temp">-5–8°C</div>
+          </div>
+        </div>
+        <p class="best-time-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Spring (Mar–May) brings cherry blossoms and mild trails; the official climbing season runs July–early September.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SWITZERLAND ===================== -->
+  <section class="country-section align-right" id="switzerland" data-weather="pollen">
+    <div class="country-bg parallax-bg" data-speed="0.35" style="background-image:url('https://images.unsplash.com/photo-1747137657921-f8176c34e33b?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="country-overlay" style="background:linear-gradient(260deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0.45) 45%, rgba(8,10,15,0.15) 75%);"></div>
+    <div class="country-content">
+      <div class="country-panel reveal">
+        <div class="country-flag-row"><span class="country-num">02 / SWITZERLAND</span></div>
+        <h3>The Swiss Alps</h3>
+        <span class="country-loc">Airolo, Ticino Canton</span>
+        <p>Emerald meadows roll up into jagged, snow-dusted peaks across the Swiss Alps — a range that has shaped European identity for centuries as a crossroads of trade routes, mountaineering, and alpine farming culture.</p>
+        <p>Above Airolo, cloud shadows drift across high pastures where cattle graze within sight of glaciers, and every valley reveals a different postcard view.</p>
+        <div class="country-stats">
+          <div class="stat"><div class="stat-num" data-count="4808" data-suffix="m">0m</div><div class="stat-label">Mont Blanc Peak</div></div>
+          <div class="stat"><div class="stat-num" data-count="1200" data-suffix="km">0km</div><div class="stat-label">Range Length</div></div>
+          <div class="stat"><div class="stat-num" data-count="100" data-suffix="+">0+</div><div class="stat-label">Glaciers</div></div>
+        </div>
+        <div class="climate-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg>
+          Weather &amp; Best Season
+        </div>
+        <div class="climate-strip">
+          <div class="climate-chip">
+            <div class="season-icon icon-blossom"><svg viewBox="0 0 24 24" fill="#f4a6c1"><circle cx="12" cy="6" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="2.2" fill="#e8b04b"/></svg></div>
+            <div class="season-name">Spring</div><div class="season-temp">5–15°C</div>
+          </div>
+          <div class="climate-chip best">
+            <div class="season-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#4fb888" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+            <div class="season-name">Summer</div><div class="season-temp">15–25°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-leaf"><svg viewBox="0 0 24 24" fill="#e8b04b"><path d="M17 3c-6 0-12 5-12 12 0 3 2 5 5 5 7 0 12-6 12-12 0-3-2-5-5-5z"/></svg></div>
+            <div class="season-name">Autumn</div><div class="season-temp">5–15°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-snowflake"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M12 2v20M4 7l16 10M20 7L4 17"/></svg></div>
+            <div class="season-name">Winter</div><div class="season-temp">-5–5°C</div>
+          </div>
+        </div>
+        <p class="best-time-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          June–September gives green valleys and open hiking trails; December–March turns the Alps into a ski destination instead.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NORWAY ===================== -->
+  <section class="country-section align-left" id="norway" data-weather="snow">
+    <div class="country-bg parallax-bg" data-speed="0.35" style="background-image:url('https://images.unsplash.com/photo-1744619438365-19c55e108cb7?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="country-overlay" style="background:linear-gradient(100deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0.45) 45%, rgba(8,10,15,0.15) 75%);"></div>
+    <div class="country-content">
+      <div class="country-panel reveal">
+        <div class="country-flag-row"><span class="country-num">03 / NORWAY</span></div>
+        <h3>Lofoten Fjords</h3>
+        <span class="country-loc">Reinebringen, Lofoten Islands</span>
+        <p>Sheer granite peaks plunge straight into Arctic waters across the Lofoten archipelago, where fishing villages cling to narrow strips of shoreline beneath mountains carved by ancient glaciers.</p>
+        <p>The iconic view from Reinebringen — a jagged ridge overlooking Reine's red cabins and turquoise water — has become one of the most photographed vistas in Scandinavia.</p>
+        <div class="country-stats">
+          <div class="stat"><div class="stat-num" data-count="448" data-suffix="m">0m</div><div class="stat-label">Reinebringen Peak</div></div>
+          <div class="stat"><div class="stat-num" data-count="68" data-suffix="°N">0°N</div><div class="stat-label">Arctic Latitude</div></div>
+          <div class="stat"><div class="stat-num" data-count="24" data-suffix="h">0h</div><div class="stat-label">Midnight Sun</div></div>
+        </div>
+        <div class="climate-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg>
+          Weather &amp; Best Season
+        </div>
+        <div class="climate-strip">
+          <div class="climate-chip">
+            <div class="season-icon icon-blossom"><svg viewBox="0 0 24 24" fill="#f4a6c1"><circle cx="12" cy="6" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="2.2" fill="#e8b04b"/></svg></div>
+            <div class="season-name">Spring</div><div class="season-temp">2–8°C</div>
+          </div>
+          <div class="climate-chip best">
+            <div class="season-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7fa8d9" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+            <div class="season-name">Summer</div><div class="season-temp">10–16°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-leaf"><svg viewBox="0 0 24 24" fill="#e8b04b"><path d="M17 3c-6 0-12 5-12 12 0 3 2 5 5 5 7 0 12-6 12-12 0-3-2-5-5-5z"/></svg></div>
+            <div class="season-name">Autumn</div><div class="season-temp">4–10°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-snowflake"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M12 2v20M4 7l16 10M20 7L4 17"/></svg></div>
+            <div class="season-name">Winter</div><div class="season-temp">-2–4°C</div>
+          </div>
+        </div>
+        <p class="best-time-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          June–August for round-the-clock Midnight Sun; September–March instead offers a strong chance of the Northern Lights.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ICELAND ===================== -->
+  <section class="country-section align-right" id="iceland" data-weather="mist">
+    <div class="country-bg parallax-bg" data-speed="0.35" style="background-image:url('https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="country-overlay" style="background:linear-gradient(260deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0.45) 45%, rgba(8,10,15,0.15) 75%);"></div>
+    <div class="country-content">
+      <div class="country-panel reveal">
+        <div class="country-flag-row"><span class="country-num">04 / ICELAND</span></div>
+        <h3>Seljalandsfoss</h3>
+        <span class="country-loc">South Coast, Iceland</span>
+        <p>Fed by meltwater from the Eyjafjallajökull glacier, Seljalandsfoss plunges 60 meters over a cliff that once formed part of Iceland's coastline — a walking path even circles behind the curtain of falling water.</p>
+        <p>Iceland's south coast is a procession of waterfalls, black-sand beaches, and volcanic fields, all shaped by the restless geology sitting atop the Mid-Atlantic Ridge.</p>
+        <div class="country-stats">
+          <div class="stat"><div class="stat-num" data-count="60" data-suffix="m">0m</div><div class="stat-label">Waterfall Height</div></div>
+          <div class="stat"><div class="stat-num" data-count="130" data-suffix="+">0+</div><div class="stat-label">Volcanoes</div></div>
+          <div class="stat"><div class="stat-num" data-count="10000" data-suffix="+">0+</div><div class="stat-label">Waterfalls Islandwide</div></div>
+        </div>
+        <div class="climate-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg>
+          Weather &amp; Best Season
+        </div>
+        <div class="climate-strip">
+          <div class="climate-chip">
+            <div class="season-icon icon-blossom"><svg viewBox="0 0 24 24" fill="#f4a6c1"><circle cx="12" cy="6" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="2.2" fill="#e8b04b"/></svg></div>
+            <div class="season-name">Spring</div><div class="season-temp">2–8°C</div>
+          </div>
+          <div class="climate-chip best">
+            <div class="season-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+            <div class="season-name">Summer</div><div class="season-temp">10–15°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-leaf"><svg viewBox="0 0 24 24" fill="#e8b04b"><path d="M17 3c-6 0-12 5-12 12 0 3 2 5 5 5 7 0 12-6 12-12 0-3-2-5-5-5z"/></svg></div>
+            <div class="season-name">Autumn</div><div class="season-temp">3–9°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-snowflake"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M12 2v20M4 7l16 10M20 7L4 17"/></svg></div>
+            <div class="season-name">Winter</div><div class="season-temp">-1–4°C</div>
+          </div>
+        </div>
+        <p class="best-time-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          June–August brings nearly 24-hour daylight and easier road access; winter trades that for ice formations and aurora chances.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NEW ZEALAND ===================== -->
+  <section class="country-section align-left" id="newzealand" data-weather="rain">
+    <div class="country-bg parallax-bg" data-speed="0.35" style="background-image:url('https://images.unsplash.com/photo-1535451180130-91275dae7d6f?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="country-overlay" style="background:linear-gradient(100deg, rgba(8,10,15,0.85) 0%, rgba(8,10,15,0.45) 45%, rgba(8,10,15,0.15) 75%);"></div>
+    <div class="country-content">
+      <div class="country-panel reveal">
+        <div class="country-flag-row"><span class="country-num">05 / NEW ZEALAND</span></div>
+        <h3>Milford Sound</h3>
+        <span class="country-loc">Fiordland National Park, South Island</span>
+        <p>Rudyard Kipling once called it the eighth wonder of the world — a fjord carved by glaciers into sheer rock walls that rise straight from the sea, laced with dozens of waterfalls that appear whenever it rains.</p>
+        <p>Part of Te Wahipounamu, a UNESCO World Heritage site, Milford Sound sits within one of the wettest and most pristine wilderness regions left on Earth.</p>
+        <div class="country-stats">
+          <div class="stat"><div class="stat-num" data-count="1692" data-suffix="m">0m</div><div class="stat-label">Mitre Peak</div></div>
+          <div class="stat"><div class="stat-num" data-count="6813" data-suffix="mm">0mm</div><div class="stat-label">Annual Rainfall</div></div>
+          <div class="stat"><div class="stat-num" data-count="15" data-suffix="km">0km</div><div class="stat-label">Fjord Length</div></div>
+        </div>
+        <div class="climate-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 19a4 4 0 010-8 5 5 0 019.9-1A4.5 4.5 0 0117 19H8z"/></svg>
+          Weather &amp; Best Season <span style="opacity:0.6;">(Southern Hemisphere)</span>
+        </div>
+        <div class="climate-strip">
+          <div class="climate-chip">
+            <div class="season-icon icon-blossom"><svg viewBox="0 0 24 24" fill="#f4a6c1"><circle cx="12" cy="6" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="2.2" fill="#e8b04b"/></svg></div>
+            <div class="season-name">Sep–Nov</div><div class="season-temp">8–15°C</div>
+          </div>
+          <div class="climate-chip best">
+            <div class="season-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#9b7fd9" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
+            <div class="season-name">Dec–Feb</div><div class="season-temp">12–19°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-leaf"><svg viewBox="0 0 24 24" fill="#e8b04b"><path d="M17 3c-6 0-12 5-12 12 0 3 2 5 5 5 7 0 12-6 12-12 0-3-2-5-5-5z"/></svg></div>
+            <div class="season-name">Mar–May</div><div class="season-temp">8–16°C</div>
+          </div>
+          <div class="climate-chip">
+            <div class="season-icon icon-snowflake"><svg viewBox="0 0 24 24" fill="none" stroke="#63c7e8" stroke-width="2"><path d="M12 2v20M4 7l16 10M20 7L4 17"/></svg></div>
+            <div class="season-name">Jun–Aug</div><div class="season-temp">3–10°C</div>
+          </div>
+        </div>
+        <p class="best-time-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          December–February (Southern Hemisphere summer) has the mildest weather, though rain — and its famous waterfalls — can appear any day of the year.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QUOTE ===================== -->
+  <section class="quote-section" data-weather="light">
+    <div class="quote-mark reveal">"</div>
+    <blockquote class="reveal reveal-delay-1">In every walk with nature, one receives far more than he seeks.</blockquote>
+    <p class="quote-attr reveal reveal-delay-2">— John Muir</p>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>FIVE PEAKS</h3>
+      <p>An immersive tribute to five of the world's most iconic natural landscapes — from sacred volcanoes to glacier-carved fjords.</p>
+    </div>
+    <div class="footer-col">
+      <h6>Destinations</h6>
+      <ul>
+        <li><a href="#japan">Mount Fuji, Japan</a></li>
+        <li><a href="#switzerland">Swiss Alps</a></li>
+        <li><a href="#norway">Lofoten, Norway</a></li>
+        <li><a href="#iceland">Seljalandsfoss, Iceland</a></li>
+        <li><a href="#newzealand">Milford Sound, NZ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h6>Plan Your Visit</h6>
+      <ul>
+        <li><a href="#">Best Viewpoints</a></li>
+        <li><a href="#">Seasonal Guide</a></li>
+        <li><a href="#">Photography Tips</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h6>Connect</h6>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Travel Journal</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Five Peaks Journeys. A tribute experience, not an official tourism site.</span>
+    <span>Photography via Unsplash contributors · Climate data approximate seasonal averages</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===================== NAV: scroll state + mobile toggle ===================== */
+  const navbar = document.getElementById('navbar');
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  const navUnderline = document.getElementById('navUnderline');
+  const navAnchors = Array.from(navLinks.querySelectorAll('a'));
+
+  function updateNavState() {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+  }
+  updateNavState();
+
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+
+  navAnchors.forEach(link => {
+    link.addEventListener('click', () => {
+      navToggle.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  /* Scroll-spy: highlight active nav link + move underline */
+  const countrySections = document.querySelectorAll('.country-section[id]');
+  let activeId = null;
+
+  function moveUnderline(link) {
+    if (!link || window.innerWidth <= 768) { navUnderline.style.opacity = '0'; return; }
+    const linkRect = link.getBoundingClientRect();
+    const navRect = navLinks.getBoundingClientRect();
+    navUnderline.style.left = (linkRect.left - navRect.left) + 'px';
+    navUnderline.style.width = linkRect.width + 'px';
+    navUnderline.style.opacity = '1';
+  }
+
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+        activeId = entry.target.id;
+        navAnchors.forEach(a => a.classList.toggle('active', a.dataset.target === activeId));
+        const activeLink = navAnchors.find(a => a.dataset.target === activeId);
+        moveUnderline(activeLink);
+      }
+    });
+  }, { threshold: [0.4, 0.5, 0.6] });
+
+  countrySections.forEach(sec => spyObserver.observe(sec));
+  window.addEventListener('resize', () => {
+    const activeLink = navAnchors.find(a => a.dataset.target === activeId);
+    moveUnderline(activeLink);
+  });
+
+  /* ===================== PARALLAX: rAF-driven, jank-free ===================== */
+  const heroPhoto = document.getElementById('heroPhoto');
+  const bgLayers = Array.from(document.querySelectorAll('.parallax-bg'));
+  const cursorGlow = document.getElementById('cursor-glow');
+  let ticking = false;
+  let mouseX = 0, mouseY = 0, glowActive = false;
+
+  function applyParallax() {
+    const scrollY = window.scrollY;
+
+    const heroHeight = document.querySelector('.parallax-hero').offsetHeight;
+    if (scrollY < heroHeight * 1.3) {
+      heroPhoto.style.transform = `translate3d(0, ${scrollY * 0.35}px, 0) scale(1.15)`;
+    }
+
+    bgLayers.forEach(layer => {
+      const section = layer.closest('.country-section');
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom > -200 && rect.top < window.innerHeight + 200) {
+        const speed = parseFloat(layer.getAttribute('data-speed')) || 0.3;
+        const offset = rect.top * speed;
+        layer.style.transform = `translate3d(0, ${offset}px, 0) scale(1.15)`;
+      }
+    });
+
+    if (glowActive) {
+      cursorGlow.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%,-50%)`;
+    }
+
+    updateNavState();
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) { window.requestAnimationFrame(applyParallax); ticking = true; }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  applyParallax();
+
+  /* Cursor glow (desktop only) */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursorGlow.style.opacity = '1';
+      glowActive = true;
+      if (!ticking) { window.requestAnimationFrame(applyParallax); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('mouseleave', () => { cursorGlow.style.opacity = '0'; });
+  }
+
+  /* ===================== INTERSECTION OBSERVER: reveal animations ===================== */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* ===================== ANIMATED STAT COUNTERS ===================== */
+  const statEls = document.querySelectorAll('.stat-num[data-count]');
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.getAttribute('data-count'));
+      const suffix = el.getAttribute('data-suffix') || '';
+      const duration = 1400;
+      const start = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.floor(target * eased);
+        el.textContent = value.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toLocaleString() + suffix;
+      }
+      requestAnimationFrame(tick);
+      countObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  statEls.forEach(el => countObserver.observe(el));
+
+  /* ===================== DESTINATION CARD 3D TILT ===================== */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.dest-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+  }
+
+  /* ===================== WEATHER-THEMED AMBIENT PARTICLES ===================== */
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let canvasHeight = 0;
+  let currentWeather = 'sakura';
+  let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth * window.devicePixelRatio;
+    canvas.height = window.innerHeight * window.devicePixelRatio;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+    canvasHeight = window.innerHeight;
+  }
+
+  function makeParticle(weather) {
+    const base = {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * -canvasHeight,
+      rotation: Math.random() * 360,
+    };
+    switch (weather) {
+      case 'snow':
+        return Object.assign(base, { type: 'snow', size: 1.5 + Math.random() * 2.5, speedY: 0.4 + Math.random() * 0.5, speedX: (Math.random() - 0.5) * 0.4, sway: Math.random() * Math.PI * 2, swaySpeed: 0.015 + Math.random() * 0.015, opacity: 0.5 + Math.random() * 0.4 });
+      case 'rain':
+        return Object.assign(base, { type: 'rain', size: 8 + Math.random() * 10, speedY: 4 + Math.random() * 3, speedX: -0.3, sway: 0, swaySpeed: 0, opacity: 0.3 + Math.random() * 0.3 });
+      case 'mist':
+        return Object.assign(base, { type: 'mist', size: 30 + Math.random() * 40, speedY: 0.12 + Math.random() * 0.12, speedX: (Math.random() - 0.5) * 0.15, sway: Math.random() * Math.PI * 2, swaySpeed: 0.005, opacity: 0.08 + Math.random() * 0.1 });
+      case 'pollen':
+        return Object.assign(base, { type: 'light', size: 1 + Math.random() * 2, speedY: 0.15 + Math.random() * 0.25, speedX: (Math.random() - 0.5) * 0.5, sway: Math.random() * Math.PI * 2, swaySpeed: 0.012 + Math.random() * 0.015, opacity: 0.35 + Math.random() * 0.4, color: '210,235,190' });
+      case 'sakura':
+      default:
+        const type = Math.random() > 0.55 ? 'petal' : 'light';
+        return Object.assign(base, {
+          type,
+          size: type === 'petal' ? (4 + Math.random() * 6) : (1 + Math.random() * 2.5),
+          speedY: type === 'petal' ? (0.4 + Math.random() * 0.6) : (0.15 + Math.random() * 0.3),
+          speedX: (Math.random() - 0.5) * 0.6,
+          sway: Math.random() * Math.PI * 2,
+          swaySpeed: 0.01 + Math.random() * 0.02,
+          opacity: type === 'petal' ? (0.45 + Math.random() * 0.35) : (0.25 + Math.random() * 0.45),
+          rotSpeed: (Math.random() - 0.5) * 1.2,
+          color: '255,230,170'
+        });
+    }
+  }
+
+  function initParticles() {
+    const count = window.innerWidth < 700 ? 16 : 30;
+    particles = Array.from({ length: count }, () => makeParticle(currentWeather));
+  }
+
+  function drawPetal(p) {
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.globalAlpha = p.opacity; ctx.fillStyle = '#f4a6c1';
+    ctx.beginPath(); ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function drawLight(p) {
+    ctx.save(); ctx.globalAlpha = p.opacity;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+    g.addColorStop(0, `rgba(${p.color || '255,230,170'}, 0.9)`);
+    g.addColorStop(1, `rgba(${p.color || '255,230,170'}, 0)`);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function drawSnow(p) {
+    ctx.save(); ctx.globalAlpha = p.opacity; ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function drawRain(p) {
+    ctx.save(); ctx.globalAlpha = p.opacity;
+    ctx.strokeStyle = 'rgba(160,210,255,0.9)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + p.size * 0.15, p.y + p.size); ctx.stroke();
+    ctx.restore();
+  }
+  function drawMist(p) {
+    ctx.save(); ctx.globalAlpha = p.opacity;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+    g.addColorStop(0, 'rgba(255,255,255,0.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    particles.forEach((p, i) => {
+      p.sway += p.swaySpeed || 0;
+      p.y += p.speedY;
+      p.x += p.speedX + Math.sin(p.sway) * (p.type === 'rain' || p.type === 'mist' ? 0.1 : 0.5);
+      if (p.rotSpeed) p.rotation += p.rotSpeed;
+
+      if (p.y > window.innerHeight + 40) {
+        particles[i] = makeParticle(currentWeather);
+        particles[i].y = -20;
+        return;
+      }
+      if (p.x > window.innerWidth + 40) p.x = -40;
+      if (p.x < -40) p.x = window.innerWidth + 40;
+
+      if (p.type === 'petal') drawPetal(p);
+      else if (p.type === 'light') drawLight(p);
+      else if (p.type === 'snow') drawSnow(p);
+      else if (p.type === 'rain') drawRain(p);
+      else if (p.type === 'mist') drawMist(p);
+    });
+    requestAnimationFrame(animateParticles);
+  }
+
+  resizeCanvas();
+  initParticles();
+  window.addEventListener('resize', () => { resizeCanvas(); });
+  if (!reduceMotion) requestAnimationFrame(animateParticles);
+
+  /* Switch ambient weather theme based on which section is in view */
+  const weatherSections = document.querySelectorAll('[data-weather]');
+  const weatherObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        currentWeather = entry.target.getAttribute('data-weather');
+      }
+    });
+  }, { threshold: [0.5] });
+  weatherSections.forEach(sec => weatherObserver.observe(sec));
+
+  /* ===================== SMOOTH ANCHOR SCROLL (fallback) ===================== */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
